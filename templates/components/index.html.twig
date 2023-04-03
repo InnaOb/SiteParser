@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<h1>Site Parser Results</h1>
+
+<table>
+    <thead>
+    <tr>
+        <th>Page Address</th>
+        <th>Number of Images</th>
+        <th>Page Processing Speed</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for page in pages %}
+    <tr>
+        <td>{{ page.url }}</td>
+        <td{{ page.imagesCount }}</td>
+        <td>{{ page.processingSpeed }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

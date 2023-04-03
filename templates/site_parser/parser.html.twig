@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+          crossorigin="anonymous">
+    <style>
+        td, th {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 0;
+            padding: 0.75rem;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <h1 class="mt-5">Site Parser Results</h1>
+
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>Page Address</th>
+                <th>Number of Images</th>
+                <th>Page Processing Speed</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for page in pages %}
+                <tr>
+                    <td><a href="{{ page.url }}">{{ page.url }}</a></td>
+                    <td>{{ page.imagesCount }}</td>
+                    <td>{{ page.processingTime }}</td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="3">No pages found</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
