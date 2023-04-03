@@ -8,6 +8,10 @@ use App\Entity\Page;
 use App\Repository\PageRepository;
 use InvalidArgumentException;
 use Psr\Log\LoggerInterface;
+use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class SiteParser
@@ -48,6 +52,12 @@ class SiteParser
         $this->limit = $limit;
     }
 
+    /**
+     * @throws TransportExceptionInterface
+     * @throws ServerExceptionInterface
+     * @throws RedirectionExceptionInterface
+     * @throws ClientExceptionInterface
+     */
     public function parseSite(): void
     {
         if (!isset($this->baseUrl)) {
@@ -89,7 +99,7 @@ class SiteParser
             $contentType = $response->getHeaders()['content-type'][0] ?? '';
 
             if (strpos($contentType, 'text/html') === false) {
-                $this->logger->warning('Skipping non-HTML page', ['url' => $url]);
+                $this->logger->debug('Skipping non-HTML page', ['url' => $url]);
                 continue;
             }
 
@@ -98,7 +108,7 @@ class SiteParser
 
             $this->logger->info('Page parsed', ['url' => $url, 'imagesCount' => $imagesCount]);
 
-            $page = new Page(substr($url, 0, 255), $imagesCount, $processingTime);
+            $page = new Page($url, $imagesCount, $processingTime);
             $this->pageRepository->save($page);
 
             if (count($visitedPages) >= $this->limit) {
